@@ -1,2 +1,4 @@
 server/node_modules
 server/.env
+server/generate-help.txt
+server/prisma-help.txt

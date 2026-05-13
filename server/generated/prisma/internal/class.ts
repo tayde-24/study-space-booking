@@ -20,7 +20,7 @@ const config: runtime.GetPrismaClientConfig = {
   "clientVersion": "7.8.0",
   "engineVersion": "3c6e192761c0362d496ed980de936e2f3cebcd3a",
   "activeProvider": "postgresql",
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Get a free hosted Postgres database in seconds: `npx create-db`\n\ngenerator client {\n  provider = \"prisma-client\"\n  output   = \"../generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nmodel Room {\n  id       Int    @id @default(autoincrement())\n  name     String\n  capacity Int\n}\n",
+  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Get a free hosted Postgres database in seconds: `npx create-db`\n\ngenerator client {\n  provider   = \"prisma-client\"\n  output     = \"../generated/prisma\"\n  engineType = \"client\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nmodel User {\n  id       Int       @id @default(autoincrement())\n  name     String\n  email    String    @unique\n  bookings Booking[]\n}\n\nmodel Room {\n  id       Int       @id @default(autoincrement())\n  name     String\n  capacity Int\n  bookings Booking[]\n}\n\nmodel Booking {\n  id        Int      @id @default(autoincrement())\n  userId    Int\n  roomId    Int\n  startTime DateTime\n  endTime   DateTime\n\n  createdAt DateTime @default(now())\n\n  user User @relation(fields: [userId], references: [id])\n  room Room @relation(fields: [roomId], references: [id])\n}\n",
   "runtimeDataModel": {
     "models": {},
     "enums": {},
@@ -32,10 +32,10 @@ const config: runtime.GetPrismaClientConfig = {
   }
 }
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"Room\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"capacity\",\"kind\":\"scalar\",\"type\":\"Int\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"User\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"bookings\",\"kind\":\"object\",\"type\":\"Booking\",\"relationName\":\"BookingToUser\"}],\"dbName\":null},\"Room\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"capacity\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"bookings\",\"kind\":\"object\",\"type\":\"Booking\",\"relationName\":\"BookingToRoom\"}],\"dbName\":null},\"Booking\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"roomId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"startTime\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"endTime\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"BookingToUser\"},{\"name\":\"room\",\"kind\":\"object\",\"type\":\"Room\",\"relationName\":\"BookingToRoom\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
 config.parameterizationSchema = {
-  strings: JSON.parse("[\"where\",\"Room.findUnique\",\"Room.findUniqueOrThrow\",\"orderBy\",\"cursor\",\"Room.findFirst\",\"Room.findFirstOrThrow\",\"Room.findMany\",\"data\",\"Room.createOne\",\"Room.createMany\",\"Room.createManyAndReturn\",\"Room.updateOne\",\"Room.updateMany\",\"Room.updateManyAndReturn\",\"create\",\"update\",\"Room.upsertOne\",\"Room.deleteOne\",\"Room.deleteMany\",\"having\",\"_count\",\"_avg\",\"_sum\",\"_min\",\"_max\",\"Room.groupBy\",\"Room.aggregate\",\"AND\",\"OR\",\"NOT\",\"id\",\"name\",\"capacity\",\"equals\",\"in\",\"notIn\",\"lt\",\"lte\",\"gt\",\"gte\",\"contains\",\"startsWith\",\"endsWith\",\"not\",\"set\",\"increment\",\"decrement\",\"multiply\",\"divide\"]"),
-  graph: "KwsQBhwAACIAMB0AAAQAEB4AACIAMB8CAAAAASABACQAISECACMAIQEAAAABACABAAAAAQAgBhwAACIAMB0AAAQAEB4AACIAMB8CACMAISABACQAISECACMAIQADAAAABAAgAwAABQAwBAAAAQAgAwAAAAQAIAMAAAUAMAQAAAEAIAMAAAAEACADAAAFADAEAAABACADHwIAAAABIAEAAAABIQIAAAABAQgAAAkAIAMfAgAAAAEgAQAAAAEhAgAAAAEBCAAACwAwAQgAAAsAMAMfAgArACEgAQAqACEhAgArACECAAAAAQAgCAAADgAgAx8CACsAISABACoAISECACsAIQIAAAAEACAIAAAQACACAAAABAAgCAAAEAAgAwAAAAEAIA8AAAkAIBAAAA4AIAEAAAABACABAAAABAAgBRUAACUAIBYAACYAIBcAACkAIBgAACgAIBkAACcAIAYcAAAaADAdAAAXABAeAAAaADAfAgAbACEgAQAcACEhAgAbACEDAAAABAAgAwAAFgAwFAAAFwAgAwAAAAQAIAMAAAUAMAQAAAEAIAYcAAAaADAdAAAXABAeAAAaADAfAgAbACEgAQAcACEhAgAbACENFQAAHgAgFgAAIQAgFwAAHgAgGAAAHgAgGQAAHgAgIgIAAAABIwIAAAAEJAIAAAAEJQIAAAABJgIAAAABJwIAAAABKAIAAAABLAIAIAAhDhUAAB4AIBgAAB8AIBkAAB8AICIBAAAAASMBAAAABCQBAAAABCUBAAAAASYBAAAAAScBAAAAASgBAAAAASkBAAAAASoBAAAAASsBAAAAASwBAB0AIQ4VAAAeACAYAAAfACAZAAAfACAiAQAAAAEjAQAAAAQkAQAAAAQlAQAAAAEmAQAAAAEnAQAAAAEoAQAAAAEpAQAAAAEqAQAAAAErAQAAAAEsAQAdACEIIgIAAAABIwIAAAAEJAIAAAAEJQIAAAABJgIAAAABJwIAAAABKAIAAAABLAIAHgAhCyIBAAAAASMBAAAABCQBAAAABCUBAAAAASYBAAAAAScBAAAAASgBAAAAASkBAAAAASoBAAAAASsBAAAAASwBAB8AIQ0VAAAeACAWAAAhACAXAAAeACAYAAAeACAZAAAeACAiAgAAAAEjAgAAAAQkAgAAAAQlAgAAAAEmAgAAAAEnAgAAAAEoAgAAAAEsAgAgACEIIggAAAABIwgAAAAEJAgAAAAEJQgAAAABJggAAAABJwgAAAABKAgAAAABLAgAIQAhBhwAACIAMB0AAAQAEB4AACIAMB8CACMAISABACQAISECACMAIQgiAgAAAAEjAgAAAAQkAgAAAAQlAgAAAAEmAgAAAAEnAgAAAAEoAgAAAAEsAgAeACELIgEAAAABIwEAAAAEJAEAAAAEJQEAAAABJgEAAAABJwEAAAABKAEAAAABKQEAAAABKgEAAAABKwEAAAABLAEAHwAhAAAAAAABLQEAAAABBS0CAAAAAS4CAAAAAS8CAAAAATACAAAAATECAAAAAQAAAAAFFQAGFgAHFwAIGAAJGQAKAAAAAAAFFQAGFgAHFwAIGAAJGQAKAQIBAgMBBQYBBgcBBwgBCQoBCgwCCw0DDA8BDRECDhIEERMBEhQBExUCGhgFGxkL"
+  strings: JSON.parse("[\"where\",\"orderBy\",\"cursor\",\"user\",\"bookings\",\"_count\",\"room\",\"User.findUnique\",\"User.findUniqueOrThrow\",\"User.findFirst\",\"User.findFirstOrThrow\",\"User.findMany\",\"data\",\"User.createOne\",\"User.createMany\",\"User.createManyAndReturn\",\"User.updateOne\",\"User.updateMany\",\"User.updateManyAndReturn\",\"create\",\"update\",\"User.upsertOne\",\"User.deleteOne\",\"User.deleteMany\",\"having\",\"_avg\",\"_sum\",\"_min\",\"_max\",\"User.groupBy\",\"User.aggregate\",\"Room.findUnique\",\"Room.findUniqueOrThrow\",\"Room.findFirst\",\"Room.findFirstOrThrow\",\"Room.findMany\",\"Room.createOne\",\"Room.createMany\",\"Room.createManyAndReturn\",\"Room.updateOne\",\"Room.updateMany\",\"Room.updateManyAndReturn\",\"Room.upsertOne\",\"Room.deleteOne\",\"Room.deleteMany\",\"Room.groupBy\",\"Room.aggregate\",\"Booking.findUnique\",\"Booking.findUniqueOrThrow\",\"Booking.findFirst\",\"Booking.findFirstOrThrow\",\"Booking.findMany\",\"Booking.createOne\",\"Booking.createMany\",\"Booking.createManyAndReturn\",\"Booking.updateOne\",\"Booking.updateMany\",\"Booking.updateManyAndReturn\",\"Booking.upsertOne\",\"Booking.deleteOne\",\"Booking.deleteMany\",\"Booking.groupBy\",\"Booking.aggregate\",\"AND\",\"OR\",\"NOT\",\"id\",\"userId\",\"roomId\",\"startTime\",\"endTime\",\"createdAt\",\"equals\",\"in\",\"notIn\",\"lt\",\"lte\",\"gt\",\"gte\",\"not\",\"name\",\"capacity\",\"contains\",\"startsWith\",\"endsWith\",\"every\",\"some\",\"none\",\"email\",\"is\",\"isNot\",\"connectOrCreate\",\"upsert\",\"createMany\",\"set\",\"disconnect\",\"delete\",\"connect\",\"updateMany\",\"deleteMany\",\"increment\",\"decrement\",\"multiply\",\"divide\"]"),
+  graph: "owEhMAcEAABfACA_AABhADBAAAALABBBAABhADBCAgAAAAFQAQBeACFYAQAAAAEBAAAAAQAgCwMAAGQAIAYAAGUAID8AAGIAMEAAAAMAEEEAAGIAMEICAF0AIUMCAF0AIUQCAF0AIUVAAGMAIUZAAGMAIUdAAGMAIQIDAACWAQAgBgAAlwEAIAsDAABkACAGAABlACA_AABiADBAAAADABBBAABiADBCAgAAAAFDAgBdACFEAgBdACFFQABjACFGQABjACFHQABjACEDAAAAAwAgAQAABAAwAgAABQAgAwAAAAMAIAEAAAQAMAIAAAUAIAEAAAADACABAAAAAwAgAQAAAAEAIAcEAABfACA_AABhADBAAAALABBBAABhADBCAgBdACFQAQBeACFYAQBeACEBBAAAhQEAIAMAAAALACABAAAMADACAAABACADAAAACwAgAQAADAAwAgAAAQAgAwAAAAsAIAEAAAwAMAIAAAEAIAQEAACVAQAgQgIAAAABUAEAAAABWAEAAAABAQwAABAAIANCAgAAAAFQAQAAAAFYAQAAAAEBDAAAEgAwAQwAABIAMAQEAACLAQAgQgIAbAAhUAEAdgAhWAEAdgAhAgAAAAEAIAwAABUAIANCAgBsACFQAQB2ACFYAQB2ACECAAAACwAgDAAAFwAgAgAAAAsAIAwAABcAIAMAAAABACATAAAQACAUAAAVACABAAAAAQAgAQAAAAsAIAUFAACGAQAgGQAAhwEAIBoAAIoBACAbAACJAQAgHAAAiAEAIAY_AABgADBAAAAeABBBAABgADBCAgBRACFQAQBZACFYAQBZACEDAAAACwAgAQAAHQAwGAAAHgAgAwAAAAsAIAEAAAwAMAIAAAEAIAcEAABfACA_AABcADBAAAAkABBBAABcADBCAgAAAAFQAQBeACFRAgBdACEBAAAAIQAgAQAAACEAIAcEAABfACA_AABcADBAAAAkABBBAABcADBCAgBdACFQAQBeACFRAgBdACEBBAAAhQEAIAMAAAAkACABAAAlADACAAAhACADAAAAJAAgAQAAJQAwAgAAIQAgAwAAACQAIAEAACUAMAIAACEAIAQEAACEAQAgQgIAAAABUAEAAAABUQIAAAABAQwAACkAIANCAgAAAAFQAQAAAAFRAgAAAAEBDAAAKwAwAQwAACsAMAQEAAB3ACBCAgBsACFQAQB2ACFRAgBsACECAAAAIQAgDAAALgAgA0ICAGwAIVABAHYAIVECAGwAIQIAAAAkACAMAAAwACACAAAAJAAgDAAAMAAgAwAAACEAIBMAACkAIBQAAC4AIAEAAAAhACABAAAAJAAgBQUAAHEAIBkAAHIAIBoAAHUAIBsAAHQAIBwAAHMAIAY_AABYADBAAAA3ABBBAABYADBCAgBRACFQAQBZACFRAgBRACEDAAAAJAAgAQAANgAwGAAANwAgAwAAACQAIAEAACUAMAIAACEAIAEAAAAFACABAAAABQAgAwAAAAMAIAEAAAQAMAIAAAUAIAMAAAADACABAAAEADACAAAFACADAAAAAwAgAQAABAAwAgAABQAgCAMAAG8AIAYAAHAAIEICAAAAAUMCAAAAAUQCAAAAAUVAAAAAAUZAAAAAAUdAAAAAAQEMAAA_ACAGQgIAAAABQwIAAAABRAIAAAABRUAAAAABRkAAAAABR0AAAAABAQwAAEEAMAEMAABBADAIAwAAbQAgBgAAbgAgQgIAbAAhQwIAbAAhRAIAbAAhRUAAawAhRkAAawAhR0AAawAhAgAAAAUAIAwAAEQAIAZCAgBsACFDAgBsACFEAgBsACFFQABrACFGQABrACFHQABrACECAAAAAwAgDAAARgAgAgAAAAMAIAwAAEYAIAMAAAAFACATAAA_ACAUAABEACABAAAABQAgAQAAAAMAIAUFAABmACAZAABnACAaAABqACAbAABpACAcAABoACAJPwAAUAAwQAAATQAQQQAAUAAwQgIAUQAhQwIAUQAhRAIAUQAhRUAAUgAhRkAAUgAhR0AAUgAhAwAAAAMAIAEAAEwAMBgAAE0AIAMAAAADACABAAAEADACAAAFACAJPwAAUAAwQAAATQAQQQAAUAAwQgIAUQAhQwIAUQAhRAIAUQAhRUAAUgAhRkAAUgAhR0AAUgAhDQUAAFQAIBkAAFcAIBoAAFQAIBsAAFQAIBwAAFQAIEgCAAAAAUkCAAAABEoCAAAABEsCAAAAAUwCAAAAAU0CAAAAAU4CAAAAAU8CAFYAIQsFAABUACAbAABVACAcAABVACBIQAAAAAFJQAAAAARKQAAAAARLQAAAAAFMQAAAAAFNQAAAAAFOQAAAAAFPQABTACELBQAAVAAgGwAAVQAgHAAAVQAgSEAAAAABSUAAAAAESkAAAAAES0AAAAABTEAAAAABTUAAAAABTkAAAAABT0AAUwAhCEgCAAAAAUkCAAAABEoCAAAABEsCAAAAAUwCAAAAAU0CAAAAAU4CAAAAAU8CAFQAIQhIQAAAAAFJQAAAAARKQAAAAARLQAAAAAFMQAAAAAFNQAAAAAFOQAAAAAFPQABVACENBQAAVAAgGQAAVwAgGgAAVAAgGwAAVAAgHAAAVAAgSAIAAAABSQIAAAAESgIAAAAESwIAAAABTAIAAAABTQIAAAABTgIAAAABTwIAVgAhCEgIAAAAAUkIAAAABEoIAAAABEsIAAAAAUwIAAAAAU0IAAAAAU4IAAAAAU8IAFcAIQY_AABYADBAAAA3ABBBAABYADBCAgBRACFQAQBZACFRAgBRACEOBQAAVAAgGwAAWwAgHAAAWwAgSAEAAAABSQEAAAAESgEAAAAESwEAAAABTAEAAAABTQEAAAABTgEAAAABTwEAWgAhUgEAAAABUwEAAAABVAEAAAABDgUAAFQAIBsAAFsAIBwAAFsAIEgBAAAAAUkBAAAABEoBAAAABEsBAAAAAUwBAAAAAU0BAAAAAU4BAAAAAU8BAFoAIVIBAAAAAVMBAAAAAVQBAAAAAQtIAQAAAAFJAQAAAARKAQAAAARLAQAAAAFMAQAAAAFNAQAAAAFOAQAAAAFPAQBbACFSAQAAAAFTAQAAAAFUAQAAAAEHBAAAXwAgPwAAXAAwQAAAJAAQQQAAXAAwQgIAXQAhUAEAXgAhUQIAXQAhCEgCAAAAAUkCAAAABEoCAAAABEsCAAAAAUwCAAAAAU0CAAAAAU4CAAAAAU8CAFQAIQtIAQAAAAFJAQAAAARKAQAAAARLAQAAAAFMAQAAAAFNAQAAAAFOAQAAAAFPAQBbACFSAQAAAAFTAQAAAAFUAQAAAAEDVQAAAwAgVgAAAwAgVwAAAwAgBj8AAGAAMEAAAB4AEEEAAGAAMEICAFEAIVABAFkAIVgBAFkAIQcEAABfACA_AABhADBAAAALABBBAABhADBCAgBdACFQAQBeACFYAQBeACELAwAAZAAgBgAAZQAgPwAAYgAwQAAAAwAQQQAAYgAwQgIAXQAhQwIAXQAhRAIAXQAhRUAAYwAhRkAAYwAhR0AAYwAhCEhAAAAAAUlAAAAABEpAAAAABEtAAAAAAUxAAAAAAU1AAAAAAU5AAAAAAU9AAFUAIQkEAABfACA_AABhADBAAAALABBBAABhADBCAgBdACFQAQBeACFYAQBeACFZAAALACBaAAALACAJBAAAXwAgPwAAXAAwQAAAJAAQQQAAXAAwQgIAXQAhUAEAXgAhUQIAXQAhWQAAJAAgWgAAJAAgAAAAAAABXkAAAAABBV4CAAAAAWQCAAAAAWUCAAAAAWYCAAAAAWcCAAAAAQUTAACcAQAgFAAAogEAIFsAAJ0BACBcAAChAQAgYQAAAQAgBRMAAJoBACAUAACfAQAgWwAAmwEAIFwAAJ4BACBhAAAhACADEwAAnAEAIFsAAJ0BACBhAAABACADEwAAmgEAIFsAAJsBACBhAAAhACAAAAAAAAFeAQAAAAELEwAAeAAwFAAAfQAwWwAAeQAwXAAAegAwXQAAewAgXgAAfAAwXwAAfAAwYAAAfAAwYQAAfAAwYgAAfgAwYwAAfwAwBgMAAG8AIEICAAAAAUMCAAAAAUVAAAAAAUZAAAAAAUdAAAAAAQIAAAAFACATAACDAQAgAwAAAAUAIBMAAIMBACAUAACCAQAgAQwAAJkBADALAwAAZAAgBgAAZQAgPwAAYgAwQAAAAwAQQQAAYgAwQgIAAAABQwIAXQAhRAIAXQAhRUAAYwAhRkAAYwAhR0AAYwAhAgAAAAUAIAwAAIIBACACAAAAgAEAIAwAAIEBACAJPwAAfwAwQAAAgAEAEEEAAH8AMEICAF0AIUMCAF0AIUQCAF0AIUVAAGMAIUZAAGMAIUdAAGMAIQk_AAB_ADBAAACAAQAQQQAAfwAwQgIAXQAhQwIAXQAhRAIAXQAhRUAAYwAhRkAAYwAhR0AAYwAhBUICAGwAIUMCAGwAIUVAAGsAIUZAAGsAIUdAAGsAIQYDAABtACBCAgBsACFDAgBsACFFQABrACFGQABrACFHQABrACEGAwAAbwAgQgIAAAABQwIAAAABRUAAAAABRkAAAAABR0AAAAABBBMAAHgAMFsAAHkAMF0AAHsAIGEAAHwAMAAAAAAAAAsTAACMAQAwFAAAkAEAMFsAAI0BADBcAACOAQAwXQAAjwEAIF4AAHwAMF8AAHwAMGAAAHwAMGEAAHwAMGIAAJEBADBjAAB_ADAGBgAAcAAgQgIAAAABRAIAAAABRUAAAAABRkAAAAABR0AAAAABAgAAAAUAIBMAAJQBACADAAAABQAgEwAAlAEAIBQAAJMBACABDAAAmAEAMAIAAAAFACAMAACTAQAgAgAAAIABACAMAACSAQAgBUICAGwAIUQCAGwAIUVAAGsAIUZAAGsAIUdAAGsAIQYGAABuACBCAgBsACFEAgBsACFFQABrACFGQABrACFHQABrACEGBgAAcAAgQgIAAAABRAIAAAABRUAAAAABRkAAAAABR0AAAAABBBMAAIwBADBbAACNAQAwXQAAjwEAIGEAAHwAMAEEAACFAQAgAQQAAIUBACAFQgIAAAABRAIAAAABRUAAAAABRkAAAAABR0AAAAABBUICAAAAAUMCAAAAAUVAAAAAAUZAAAAAAUdAAAAAAQNCAgAAAAFQAQAAAAFRAgAAAAECAAAAIQAgEwAAmgEAIANCAgAAAAFQAQAAAAFYAQAAAAECAAAAAQAgEwAAnAEAIAMAAAAkACATAACaAQAgFAAAoAEAIAUAAAAkACAMAACgAQAgQgIAbAAhUAEAdgAhUQIAbAAhA0ICAGwAIVABAHYAIVECAGwAIQMAAAALACATAACcAQAgFAAAowEAIAUAAAALACAMAACjAQAgQgIAbAAhUAEAdgAhWAEAdgAhA0ICAGwAIVABAHYAIVgBAHYAIQIEBgIFAAUCAwABBgADAgQHAgUABAEECAABBAkAAAAABQUAChkACxoADBsADRwADgAAAAAABQUAChkACxoADBsADRwADgAABQUAExkAFBoAFRsAFhwAFwAAAAAABQUAExkAFBoAFRsAFhwAFwIDAAEGAAMCAwABBgADBQUAHBkAHRoAHhsAHxwAIAAAAAAABQUAHBkAHRoAHhsAHxwAIAcCAQgKAQkNAQoOAQsPAQ0RAQ4TBg8UBxAWAREYBhIZCBUaARYbARccBh0fCR4gDx8iAyAjAyEmAyInAyMoAyQqAyUsBiYtECcvAygxBikyESozAys0Ayw1Bi04Ei45GC86AjA7AjE8AjI9AjM-AjRAAjVCBjZDGTdFAjhHBjlIGjpJAjtKAjxLBj1OGz5PIQ"
 }
 
 async function decodeBase64AsWasm(wasmBase64: string): Promise<WebAssembly.Module> {
@@ -70,8 +70,8 @@ export interface PrismaClientConstructor {
    * const prisma = new PrismaClient({
    *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
    * })
-   * // Fetch zero or more Rooms
-   * const rooms = await prisma.room.findMany()
+   * // Fetch zero or more Users
+   * const users = await prisma.user.findMany()
    * ```
    * 
    * Read more in our [docs](https://pris.ly/d/client).
@@ -94,8 +94,8 @@ export interface PrismaClientConstructor {
  * const prisma = new PrismaClient({
  *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
  * })
- * // Fetch zero or more Rooms
- * const rooms = await prisma.room.findMany()
+ * // Fetch zero or more Users
+ * const users = await prisma.user.findMany()
  * ```
  * 
  * Read more in our [docs](https://pris.ly/d/client).
@@ -189,6 +189,16 @@ export interface PrismaClient<
   }>>
 
       /**
+   * `prisma.user`: Exposes CRUD operations for the **User** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Users
+    * const users = await prisma.user.findMany()
+    * ```
+    */
+  get user(): Prisma.UserDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
    * `prisma.room`: Exposes CRUD operations for the **Room** model.
     * Example usage:
     * ```ts
@@ -197,6 +207,16 @@ export interface PrismaClient<
     * ```
     */
   get room(): Prisma.RoomDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.booking`: Exposes CRUD operations for the **Booking** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Bookings
+    * const bookings = await prisma.booking.findMany()
+    * ```
+    */
+  get booking(): Prisma.BookingDelegate<ExtArgs, { omit: OmitOpts }>;
 }
 
 export function getPrismaClientClass(): PrismaClientConstructor {

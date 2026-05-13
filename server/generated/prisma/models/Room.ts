@@ -204,12 +204,14 @@ export type RoomWhereInput = {
   id?: Prisma.IntFilter<"Room"> | number
   name?: Prisma.StringFilter<"Room"> | string
   capacity?: Prisma.IntFilter<"Room"> | number
+  bookings?: Prisma.BookingListRelationFilter
 }
 
 export type RoomOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   capacity?: Prisma.SortOrder
+  bookings?: Prisma.BookingOrderByRelationAggregateInput
 }
 
 export type RoomWhereUniqueInput = Prisma.AtLeast<{
@@ -219,6 +221,7 @@ export type RoomWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.RoomWhereInput | Prisma.RoomWhereInput[]
   name?: Prisma.StringFilter<"Room"> | string
   capacity?: Prisma.IntFilter<"Room"> | number
+  bookings?: Prisma.BookingListRelationFilter
 }, "id">
 
 export type RoomOrderByWithAggregationInput = {
@@ -244,23 +247,27 @@ export type RoomScalarWhereWithAggregatesInput = {
 export type RoomCreateInput = {
   name: string
   capacity: number
+  bookings?: Prisma.BookingCreateNestedManyWithoutRoomInput
 }
 
 export type RoomUncheckedCreateInput = {
   id?: number
   name: string
   capacity: number
+  bookings?: Prisma.BookingUncheckedCreateNestedManyWithoutRoomInput
 }
 
 export type RoomUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   capacity?: Prisma.IntFieldUpdateOperationsInput | number
+  bookings?: Prisma.BookingUpdateManyWithoutRoomNestedInput
 }
 
 export type RoomUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   capacity?: Prisma.IntFieldUpdateOperationsInput | number
+  bookings?: Prisma.BookingUncheckedUpdateManyWithoutRoomNestedInput
 }
 
 export type RoomCreateManyInput = {
@@ -308,24 +315,100 @@ export type RoomSumOrderByAggregateInput = {
   capacity?: Prisma.SortOrder
 }
 
-export type StringFieldUpdateOperationsInput = {
-  set?: string
+export type RoomScalarRelationFilter = {
+  is?: Prisma.RoomWhereInput
+  isNot?: Prisma.RoomWhereInput
 }
 
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
+export type RoomCreateNestedOneWithoutBookingsInput = {
+  create?: Prisma.XOR<Prisma.RoomCreateWithoutBookingsInput, Prisma.RoomUncheckedCreateWithoutBookingsInput>
+  connectOrCreate?: Prisma.RoomCreateOrConnectWithoutBookingsInput
+  connect?: Prisma.RoomWhereUniqueInput
 }
 
+export type RoomUpdateOneRequiredWithoutBookingsNestedInput = {
+  create?: Prisma.XOR<Prisma.RoomCreateWithoutBookingsInput, Prisma.RoomUncheckedCreateWithoutBookingsInput>
+  connectOrCreate?: Prisma.RoomCreateOrConnectWithoutBookingsInput
+  upsert?: Prisma.RoomUpsertWithoutBookingsInput
+  connect?: Prisma.RoomWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.RoomUpdateToOneWithWhereWithoutBookingsInput, Prisma.RoomUpdateWithoutBookingsInput>, Prisma.RoomUncheckedUpdateWithoutBookingsInput>
+}
+
+export type RoomCreateWithoutBookingsInput = {
+  name: string
+  capacity: number
+}
+
+export type RoomUncheckedCreateWithoutBookingsInput = {
+  id?: number
+  name: string
+  capacity: number
+}
+
+export type RoomCreateOrConnectWithoutBookingsInput = {
+  where: Prisma.RoomWhereUniqueInput
+  create: Prisma.XOR<Prisma.RoomCreateWithoutBookingsInput, Prisma.RoomUncheckedCreateWithoutBookingsInput>
+}
+
+export type RoomUpsertWithoutBookingsInput = {
+  update: Prisma.XOR<Prisma.RoomUpdateWithoutBookingsInput, Prisma.RoomUncheckedUpdateWithoutBookingsInput>
+  create: Prisma.XOR<Prisma.RoomCreateWithoutBookingsInput, Prisma.RoomUncheckedCreateWithoutBookingsInput>
+  where?: Prisma.RoomWhereInput
+}
+
+export type RoomUpdateToOneWithWhereWithoutBookingsInput = {
+  where?: Prisma.RoomWhereInput
+  data: Prisma.XOR<Prisma.RoomUpdateWithoutBookingsInput, Prisma.RoomUncheckedUpdateWithoutBookingsInput>
+}
+
+export type RoomUpdateWithoutBookingsInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  capacity?: Prisma.IntFieldUpdateOperationsInput | number
+}
+
+export type RoomUncheckedUpdateWithoutBookingsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  capacity?: Prisma.IntFieldUpdateOperationsInput | number
+}
+
+
+/**
+ * Count Type RoomCountOutputType
+ */
+
+export type RoomCountOutputType = {
+  bookings: number
+}
+
+export type RoomCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  bookings?: boolean | RoomCountOutputTypeCountBookingsArgs
+}
+
+/**
+ * RoomCountOutputType without action
+ */
+export type RoomCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the RoomCountOutputType
+   */
+  select?: Prisma.RoomCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * RoomCountOutputType without action
+ */
+export type RoomCountOutputTypeCountBookingsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.BookingWhereInput
+}
 
 
 export type RoomSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
   capacity?: boolean
+  bookings?: boolean | Prisma.Room$bookingsArgs<ExtArgs>
+  _count?: boolean | Prisma.RoomCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["room"]>
 
 export type RoomSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -347,10 +430,18 @@ export type RoomSelectScalar = {
 }
 
 export type RoomOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "capacity", ExtArgs["result"]["room"]>
+export type RoomInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  bookings?: boolean | Prisma.Room$bookingsArgs<ExtArgs>
+  _count?: boolean | Prisma.RoomCountOutputTypeDefaultArgs<ExtArgs>
+}
+export type RoomIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type RoomIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
 
 export type $RoomPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Room"
-  objects: {}
+  objects: {
+    bookings: Prisma.$BookingPayload<ExtArgs>[]
+  }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
     name: string
@@ -749,6 +840,7 @@ readonly fields: RoomFieldRefs;
  */
 export interface Prisma__RoomClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  bookings<T extends Prisma.Room$bookingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Room$bookingsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BookingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -798,6 +890,10 @@ export type RoomFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.Internal
    */
   omit?: Prisma.RoomOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RoomInclude<ExtArgs> | null
+  /**
    * Filter, which Room to fetch.
    */
   where: Prisma.RoomWhereUniqueInput
@@ -816,6 +912,10 @@ export type RoomFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extensions.I
    */
   omit?: Prisma.RoomOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RoomInclude<ExtArgs> | null
+  /**
    * Filter, which Room to fetch.
    */
   where: Prisma.RoomWhereUniqueInput
@@ -833,6 +933,10 @@ export type RoomFindFirstArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    * Omit specific fields from the Room
    */
   omit?: Prisma.RoomOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RoomInclude<ExtArgs> | null
   /**
    * Filter, which Room to fetch.
    */
@@ -882,6 +986,10 @@ export type RoomFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions.In
    */
   omit?: Prisma.RoomOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RoomInclude<ExtArgs> | null
+  /**
    * Filter, which Room to fetch.
    */
   where?: Prisma.RoomWhereInput
@@ -929,6 +1037,10 @@ export type RoomFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
    * Omit specific fields from the Room
    */
   omit?: Prisma.RoomOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RoomInclude<ExtArgs> | null
   /**
    * Filter, which Rooms to fetch.
    */
@@ -978,6 +1090,10 @@ export type RoomCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs
    */
   omit?: Prisma.RoomOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RoomInclude<ExtArgs> | null
+  /**
    * The data needed to create a Room.
    */
   data: Prisma.XOR<Prisma.RoomCreateInput, Prisma.RoomUncheckedCreateInput>
@@ -1025,6 +1141,10 @@ export type RoomUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs
    * Omit specific fields from the Room
    */
   omit?: Prisma.RoomOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RoomInclude<ExtArgs> | null
   /**
    * The data needed to update a Room.
    */
@@ -1092,6 +1212,10 @@ export type RoomUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs
    */
   omit?: Prisma.RoomOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RoomInclude<ExtArgs> | null
+  /**
    * The filter to search for the Room to update in case it exists.
    */
   where: Prisma.RoomWhereUniqueInput
@@ -1118,6 +1242,10 @@ export type RoomDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs
    */
   omit?: Prisma.RoomOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RoomInclude<ExtArgs> | null
+  /**
    * Filter which Room to delete.
    */
   where: Prisma.RoomWhereUniqueInput
@@ -1138,6 +1266,30 @@ export type RoomDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
 }
 
 /**
+ * Room.bookings
+ */
+export type Room$bookingsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Booking
+   */
+  select?: Prisma.BookingSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Booking
+   */
+  omit?: Prisma.BookingOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BookingInclude<ExtArgs> | null
+  where?: Prisma.BookingWhereInput
+  orderBy?: Prisma.BookingOrderByWithRelationInput | Prisma.BookingOrderByWithRelationInput[]
+  cursor?: Prisma.BookingWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.BookingScalarFieldEnum | Prisma.BookingScalarFieldEnum[]
+}
+
+/**
  * Room without action
  */
 export type RoomDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1149,4 +1301,8 @@ export type RoomDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
    * Omit specific fields from the Room
    */
   omit?: Prisma.RoomOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RoomInclude<ExtArgs> | null
 }

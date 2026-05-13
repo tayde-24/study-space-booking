@@ -15,7 +15,12 @@ import { PrismaClient } from "../generated/prisma/client.mts";
 const base = process.env.DIRECT_URL;
 const connectionString = base.includes("sslmode=") ? base : `${base}?sslmode=require`;
 
-const adapter = new PrismaPg({ connectionString });
+const adapter = new PrismaPg({
+  connectionString,
+  ssl: {
+    rejectUnauthorized: false
+  }
+});
 const prisma = new PrismaClient({ adapter });
 
 export default prisma;
